@@ -6,7 +6,7 @@
 #    By: alex <alex@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/17 17:27:38 by alex              #+#    #+#              #
-#    Updated: 2026/01/17 17:31:33 by alex             ###   ########.fr        #
+#    Updated: 2026/01/19 02:29:32 by alex             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ CFLAGS = -g -Wall -Wextra -Werror -Ilibft/ -I./include
 
 INCDIR = include
 
-SRC_MAIN = pipex.c
+SRC_MAIN = pipex.c \
+			parsing_cmd.c
 
 SRCS = $(addprefix $(SRCDIR)/,$(SRC) $(SRC_MAIN))
 SRCS_BONUS = $(addprefix $(SRCDIR)/, $(SRC_BONUS) $(SRC))
