@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 17:32:00 by alex              #+#    #+#             */
-/*   Updated: 2026/01/19 02:30:42 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/19 14:45:57 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "../libft/libft.h"
 # include "../libft/ft_printf.h"
 # include <stdio.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 /* PARSING_CMD */
 

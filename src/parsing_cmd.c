@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 02:29:18 by alex              #+#    #+#             */
-/*   Updated: 2026/01/19 02:30:03 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/19 15:47:42 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*path_to_find(char *cmd, char **envp)
 
 	i = 0;
 	nb_env = count_env(envp);
-	if (contain_a_slash(cmd))
+	if (cmd[0] == '/')
 	{
 		if(!access(cmd, F_OK | X_OK))
 			return (ft_strdup(cmd));
@@ -83,6 +83,7 @@ char	*path_to_find(char *cmd, char **envp)
 		if (!access(possible_path, F_OK | X_OK))
 			return(free_split(possible_paths), possible_path);
 		free(possible_path);
+		i++;
 	}
 	free_split(possible_paths);
 	return (NULL);
