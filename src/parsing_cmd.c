@@ -6,24 +6,11 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 02:29:18 by alex              #+#    #+#             */
-/*   Updated: 2026/01/20 03:40:58 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/21 14:42:24 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
-
-void	free_split(char **tab)
-{
-	int	i;
-	
-	i = 0;
-	while(tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
 
 char	*join_possible_path(char *cmd, char *folder)
 {
@@ -40,30 +27,11 @@ char	*join_possible_path(char *cmd, char *folder)
 	return (path);
 }
 
-int	count_env(char **envp)
+static char	*it_contain_a_slash(char *cmd)
 {
-	int	i;
-
-	i = 0;
-	if(!envp)
-		return (0);
-	while(envp[i])
-		i++;
-	return (i);
-}
-
-int	countain_a_slash(char *str)
-{
-	int	i;
-
-	i = 0;
-	while(str[i])
-	{
-		if (str[i] == '/')
-			return (1);
-		i++;
-	}
-	return (0);
+	if (!access(cmd, F_OK | X_OK))
+		return (ft_strdup(cmd));
+	return (NULL);
 }
 
 char	*path_to_find(char *cmd, char **envp)
@@ -75,13 +43,11 @@ char	*path_to_find(char *cmd, char **envp)
 
 	i = 0;
 	nb_env = count_env(envp);
-	if (countain_a_slash(cmd))
-	{
-		if(!access(cmd, F_OK | X_OK))
-			return (ft_strdup(cmd));
+	if (!cmd)
 		return (NULL);
-	}
-	while(envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
+	if (countain_a_slash(cmd))
+		return (it_contain_a_slash(cmd));
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
 	if (i == nb_env)
 		return (NULL);
@@ -89,16 +55,28 @@ char	*path_to_find(char *cmd, char **envp)
 	if (!possible_paths)
 		return (NULL);
 	i = 0;
-	while(possible_paths[i])
+	possible_path = search_possible_path(possible_paths, cmd);
+	if (!possible_path)
+		return (free_split(possible_paths), NULL);
+	free_split(possible_paths);
+	return (possible_path);
+}
+
+char	*search_possible_path(char **possible_paths, char *cmd)
+{
+	int		i;
+	char	*possible_path;
+
+	i = 0;
+	while (possible_paths[i])
 	{
 		possible_path = join_possible_path(cmd, possible_paths[i]);
 		if (!possible_path)
-			return (free_split(possible_paths), NULL);
+			return (NULL);
 		if (!access(possible_path, F_OK | X_OK))
-			return(free_split(possible_paths), possible_path);
+			return (possible_path);
 		free(possible_path);
 		i++;
 	}
-	free_split(possible_paths);
 	return (NULL);
 }

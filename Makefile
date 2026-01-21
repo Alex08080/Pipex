@@ -6,7 +6,7 @@
 #    By: alex <alex@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/17 17:27:38 by alex              #+#    #+#              #
-#    Updated: 2026/01/19 02:29:32 by alex             ###   ########.fr        #
+#    Updated: 2026/01/21 14:57:39 by alex             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,11 +18,17 @@ CFLAGS = -g -Wall -Wextra -Werror -Ilibft/ -I./include
 
 INCDIR = include
 
-SRC_MAIN = pipex.c \
-			parsing_cmd.c
+SRC_MAIN = pipex.c
+SRC =	parsing_cmd.c parsing_cmd2.c \
+		pipex_mandatory.c \
+		exec_cmd.c \
+		child_process.c \
+		
+
+SRC_BONUS = pipex_bonus.c pipex_multi_pipe_bonus.c
 
 SRCS = $(addprefix $(SRCDIR)/,$(SRC) $(SRC_MAIN))
-SRCS_BONUS = $(addprefix $(SRCDIR)/, $(SRC_BONUS) $(SRC))
+SRCS_BONUS = $(addprefix $(SRCDIR)/, $(SRC_BONUS) $(SRC) )
 SRCDIR = src
 OBJS = $(SRCS:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)
@@ -42,7 +48,7 @@ CYAN = \033[0;96m
 all: $(NAME)
 $(NAME): $(OBJS) $(LIBFT)
 	@echo "$(BLUE)Linking $(NAME)..."
-	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -L$(LIBFT_DIR) -lft > /dev/null 2>&1
+	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -L$(LIBFT_DIR) -lft
 	@echo "$(GREEN)$(NAME) created successfully!$(RESET)"
 
 $(LIBFT):
@@ -50,24 +56,22 @@ $(LIBFT):
 	@make -C $(LIBFT_DIR) all
 	@echo "$(GREEN)libft ready!$(RESET)"
 
-bonus: $(BONUS)
-
-$(BONUS): $(OBJS_BONUS) $(LIBFT)
+bonus : $(OBJS_BONUS) $(LIBFT) $(NAME)
 	@echo "$(GREEN)Compiling $(BONUS)...$(RESET)"
-	@$(CC) $(CFLAGS) $(OBJS_BONUS) -o $(BONUS) -L$(LIBFT_DIR) -lft
+	@$(CC) $(CFLAGS) $(OBJS_BONUS) -o $(NAME) -L$(LIBFT_DIR) -lft
 	@echo "$(GREEN)$(BONUS) created successfully!$(RESET)"
 
-$(SRCDIR)/%.o : $(SRCDIR)/%.c $(INCDIR)/push_swap.h
+$(SRCDIR)/%.o : $(SRCDIR)/%.c $(INCDIR)/pipex.h
 	@echo "$(YELLOW)Compiling $<...$(RESET)"
 	@$(CC) $(CFLAGS) -I./$(INCDIR) -c $< -o $@
 
 clean:
-	@make -C $(LIBFT_DIR) clean > /dev/null 2>&1
+	@make -C $(LIBFT_DIR) clean
 	@rm -f $(OBJS) $(OBJS_BONUS)
 	@echo "$(CYAN)Cleaned all .o files.$(RESET)"
 
 fclean: clean
-	@make -C $(LIBFT_DIR) fclean > /dev/null 2>&1
+	@make -C $(LIBFT_DIR) fclean
 	@rm -f $(NAME) $(BONUS)
 	@echo "$(CYAN)Cleaned $(NAME) and Libft.$(RESET)"
 
