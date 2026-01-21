@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 17:34:07 by alex              #+#    #+#             */
-/*   Updated: 2026/01/20 03:40:39 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/21 01:59:42 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@ int	main(int argc, char *argv[], char **envp)
 {
 
 	if (argc == 5)
-	{
 		return (pipex(argv, envp));
-	}
+	else if (argc == 6 && ft_strncmp(argv[1], "here_doc", 9) == 0)
+		return (pipex_here_doc(argv, envp));
+	else if (argc >= 5)
+		return(pipex_multi_pipe(argc, argv, envp));
 	return (0);
 }
 
@@ -107,5 +109,66 @@ int	pipex(char *argv[], char **envp)
 	waitpid(pid2, &status, 0);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
+	return (1);
+}
+
+int	pipex_multi_pipe(int argc, char *argv[], char **envp)
+{
+	pid_t	pid;
+	int		pipe_fd[2];
+	int		fd_infile;
+	int		fd_outfile;
+	int		status;
+	int		i;
+
+	i = 2;
+	fd_infile = open(argv[1], O_RDONLY);
+	if (fd_infile == -1)
+	{
+		perror("Coudldn't open the infile");
+		exit(1);
+	}
+	while (i != argc - 2)
+	{
+		if (pipe(pipe_fd) == -1)
+		{
+			perror("Couldn't pipe\n");
+			exit(1);
+		}
+		pid = fork();
+		if (pid < 0)
+			perror("Fork failed\n");
+		else if (pid == 0)
+		{
+			dup2(fd_infile, STDIN_FILENO);
+			dup2(pipe_fd[1], STDOUT_FILENO);
+			close(fd_infile);
+			close(pipe_fd[1]);
+			execute_cmd(argv[i], envp);
+		}
+		close(fd_infile);
+		close(pipe_fd[1]);
+		fd_infile = pipe_fd[0];
+		i++;
+	}
+	pid = fork();
+	if (pid < 0)
+		perror("Fork failed\n");
+	else if (pid == 0)
+	{
+		fd_outfile = open(argv[argc - 1], O_CREAT | O_RDWR| O_TRUNC, 0644);
+		if (fd_outfile == -1)
+		{
+			perror("Coudldn't open the infile");
+			exit(1);
+		}
+		dup2(fd_infile, STDIN_FILENO);
+		dup2(fd_outfile, STDOUT_FILENO);
+		close(fd_outfile);
+		close(fd_infile);
+		execute_cmd(argv[argc - 2], envp);
+	}
+	close(fd_infile);
+	while (wait(NULL) > 0);
 	return (1);
 }
