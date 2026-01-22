@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:42:30 by alex              #+#    #+#             */
-/*   Updated: 2026/01/21 15:26:36 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/22 02:09:47 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int	pipex_multi_pipe(int argc, char *argv[], char **envp)
 		exec_child_process_out_multi(&data, argv, envp, argc);
 	close(data.fd_infile);
 	while (waiting > 0)
-		waiting = waitpid(-1, NULL, 0);
-	return (0);
+		waiting = waitpid(-1, &data.status, 0);
+	return (data.status);
 }
 
 void	exec_child_process_out_multi(t_datap *data, char **argv,

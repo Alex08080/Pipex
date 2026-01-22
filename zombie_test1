@@ -1,0 +1,2 @@
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+alex     24396  0.0  0.0      0     0 tty1     Z    03:41   0:00 [git] <defunct>

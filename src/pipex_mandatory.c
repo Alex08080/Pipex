@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:44:06 by alex              #+#    #+#             */
-/*   Updated: 2026/01/21 15:10:23 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/22 03:05:57 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int	pipex(char *argv[], char **envp)
 {
 	t_datap	data;
+	int		s;
+	int		status;
 
 	if (pipe(data.pipe_fd) == -1)
 	{
@@ -33,8 +35,14 @@ int	pipex(char *argv[], char **envp)
 		exec_child_process_out(&data, argv, envp);
 	close(data.pipe_fd[1]);
 	close(data.pipe_fd[0]);
-	waitpid(data.pid1, &data.status, 0);
-	waitpid(data.pid2, &data.status, 0);
+	while (1)
+	{
+		s = wait(&status);
+		if (s <= 0)
+			break;
+		if (s == data.pid2)
+			data.status = status;
+	}
 	if (WIFEXITED(data.status))
 		return (WEXITSTATUS(data.status));
 	return (1);

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoderan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 00:47:13 by amoderan          #+#    #+#             */
-/*   Updated: 2025/11/11 16:41:18 by amoderan         ###   ########.fr       */
+/*   Updated: 2026/01/22 02:00:18 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 int	is_set(char const *set, char c)
@@ -43,7 +44,7 @@ size_t	ft_end(char const *s, char const *set)
 		return (0);
 	i = ft_strlen(s) - 1;
 	while (i > 0 && is_set(set, s[i]))
-			i--;
+		i--;
 	return (i);
 }
 

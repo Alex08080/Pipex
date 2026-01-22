@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 18:39:31 by amoderan          #+#    #+#             */
-/*   Updated: 2026/01/14 06:07:36 by amoderan         ###   ########.fr       */
+/*   Updated: 2026/01/22 02:01:20 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-
-typedef struct s_list{
+typedef struct s_list
+{
 	void			*content;
 	struct s_list	*next;
 }	t_list;

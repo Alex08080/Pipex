@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:48:09 by alex              #+#    #+#             */
-/*   Updated: 2026/01/21 15:09:23 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/22 03:25:31 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ void	exec_child_process_in(t_datap *data, char **argv, char **envp)
 	data->fd_infile = open(argv[1], O_RDONLY);
 	if (data->fd_infile == -1)
 	{
-		perror("Coudldn't open the infile");
+		perror("Couldn't open the infile\n");
+		close(data->pipe_fd[0]);
+		close(data->pipe_fd[1]);
 		exit(1);
 	}
 	dup2(data->fd_infile, STDIN_FILENO);
@@ -33,7 +35,9 @@ void	exec_child_process_out(t_datap *data, char **argv, char **envp)
 	data->fd_outfile = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (data->fd_outfile == -1)
 	{
-		perror("Coudldn't open the infile");
+		perror("Coulddn't open the infile\n");
+		close(data->pipe_fd[0]);
+		close(data->pipe_fd[1]);
 		exit(1);
 	}
 	dup2(data->pipe_fd[0], STDIN_FILENO);

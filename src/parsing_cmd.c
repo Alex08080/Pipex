@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 02:29:18 by alex              #+#    #+#             */
-/*   Updated: 2026/01/21 14:42:24 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/22 03:29:05 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*join_possible_path(char *cmd, char *folder)
 
 static char	*it_contain_a_slash(char *cmd)
 {
-	if (!access(cmd, F_OK | X_OK))
+	if (!access(cmd, F_OK))
 		return (ft_strdup(cmd));
 	return (NULL);
 }
@@ -42,13 +42,15 @@ char	*path_to_find(char *cmd, char **envp)
 	int		nb_env;
 
 	i = 0;
-	nb_env = count_env(envp);
 	if (!cmd)
 		return (NULL);
-	if (countain_a_slash(cmd))
+	if (ft_strchr(cmd, '/'))
 		return (it_contain_a_slash(cmd));
-	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
+	while (envp && envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
+	if (!envp || !envp[i])
+		return (NULL);
+	nb_env = count_env(envp);
 	if (i == nb_env)
 		return (NULL);
 	possible_paths = ft_split(envp[i] + 5, ':');
@@ -73,7 +75,7 @@ char	*search_possible_path(char **possible_paths, char *cmd)
 		possible_path = join_possible_path(cmd, possible_paths[i]);
 		if (!possible_path)
 			return (NULL);
-		if (!access(possible_path, F_OK | X_OK))
+		if (!access(possible_path, F_OK))
 			return (possible_path);
 		free(possible_path);
 		i++;

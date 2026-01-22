@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 17:32:00 by alex              #+#    #+#             */
-/*   Updated: 2026/01/21 15:29:55 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/22 02:14:36 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <fcntl.h>
+# include <errno.h>
+# include <string.h>
 
 typedef struct s_datap
 {
