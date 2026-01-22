@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:42:30 by alex              #+#    #+#             */
-/*   Updated: 2026/01/22 02:09:47 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/23 00:35:15 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	pipex_multi_pipe(int argc, char *argv[], char **envp)
 
 	waiting = 1;
 	data.fd_infile = open(argv[1], O_RDONLY);
+	data.here_doc = 0;
 	if (data.fd_infile == -1)
 	{
 		perror("Coudldn't open the infile");
@@ -39,7 +40,12 @@ int	pipex_multi_pipe(int argc, char *argv[], char **envp)
 void	exec_child_process_out_multi(t_datap *data, char **argv,
 			char **envp, int argc)
 {
-	data->fd_outfile = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
+	if (data->here_doc)
+		data->fd_outfile = open(argv[argc - 1], O_CREAT | O_RDWR
+				| O_APPEND, 0644);
+	else
+		data->fd_outfile = open(argv[argc - 1], O_CREAT | O_RDWR
+				| O_TRUNC, 0644);
 	if (data->fd_outfile == -1)
 	{
 		perror("Coudldn't open the infile");

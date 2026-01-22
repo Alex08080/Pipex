@@ -6,7 +6,7 @@
 #    By: alex <alex@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/17 17:27:38 by alex              #+#    #+#              #
-#    Updated: 2026/01/22 17:47:32 by alex             ###   ########.fr        #
+#    Updated: 2026/01/23 00:12:19 by alex             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,8 @@ SRC =	parsing_cmd.c parsing_cmd2.c \
 		child_process.c \
 		
 
-SRC_BONUS = pipex_bonus.c pipex_multi_pipe_bonus.c
+SRC_BONUS = pipex_bonus.c pipex_multi_pipe_bonus.c pipex_here_doc_bonus.c \
+			get_next_line_bonus.c get_next_line_utils_bonus.c
 
 SRCS = $(addprefix $(SRCDIR)/,$(SRC) $(SRC_MAIN))
 SRCS_BONUS = $(addprefix $(SRCDIR)/, $(SRC_BONUS) $(SRC) )
@@ -56,7 +57,7 @@ $(LIBFT):
 	@make -C $(LIBFT_DIR) all
 	@echo "$(GREEN)libft ready!$(RESET)"
 
-bonus : $(OBJS_BONUS) $(LIBFT)
+bonus : $(OBJS_BONUS) $(LIBFT) $(INCDIR)/get_next_line_bonus.h
 	@echo "$(GREEN)Compiling $(BONUS)...$(RESET)"
 	@$(CC) $(CFLAGS) $(OBJS_BONUS) -o $(NAME) -L$(LIBFT_DIR) -lft
 	@echo "$(GREEN)$(BONUS) created successfully!$(RESET)"
