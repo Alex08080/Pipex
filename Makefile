@@ -6,7 +6,7 @@
 #    By: alex <alex@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/17 17:27:38 by alex              #+#    #+#              #
-#    Updated: 2026/01/21 14:57:39 by alex             ###   ########.fr        #
+#    Updated: 2026/01/22 17:47:32 by alex             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,7 @@ $(LIBFT):
 	@make -C $(LIBFT_DIR) all
 	@echo "$(GREEN)libft ready!$(RESET)"
 
-bonus : $(OBJS_BONUS) $(LIBFT) $(NAME)
+bonus : $(OBJS_BONUS) $(LIBFT)
 	@echo "$(GREEN)Compiling $(BONUS)...$(RESET)"
 	@$(CC) $(CFLAGS) $(OBJS_BONUS) -o $(NAME) -L$(LIBFT_DIR) -lft
 	@echo "$(GREEN)$(BONUS) created successfully!$(RESET)"
