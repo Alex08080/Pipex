@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 02:29:18 by alex              #+#    #+#             */
-/*   Updated: 2026/01/22 03:29:05 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/22 17:13:50 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static char	*it_contain_a_slash(char *cmd)
 {
 	if (!access(cmd, F_OK))
 		return (ft_strdup(cmd));
-	return (NULL);
+	return (perror("Command not found"), NULL);
 }
 
 char	*path_to_find(char *cmd, char **envp)
@@ -43,23 +43,21 @@ char	*path_to_find(char *cmd, char **envp)
 
 	i = 0;
 	if (!cmd)
-		return (NULL);
+		return (perror("Command not found"), NULL);
 	if (ft_strchr(cmd, '/'))
 		return (it_contain_a_slash(cmd));
 	while (envp && envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
-	if (!envp || !envp[i])
-		return (NULL);
 	nb_env = count_env(envp);
 	if (i == nb_env)
-		return (NULL);
+		return (perror("No such file or directory"), NULL);
 	possible_paths = ft_split(envp[i] + 5, ':');
 	if (!possible_paths)
-		return (NULL);
+		return (perror("No such file or directory"), NULL);
 	i = 0;
 	possible_path = search_possible_path(possible_paths, cmd);
 	if (!possible_path)
-		return (free_split(possible_paths), NULL);
+		return (free_split(possible_paths), perror("Command not found"), NULL);
 	free_split(possible_paths);
 	return (possible_path);
 }
