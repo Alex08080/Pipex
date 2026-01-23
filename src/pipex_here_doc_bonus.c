@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 20:43:54 by alex              #+#    #+#             */
-/*   Updated: 2026/01/23 00:44:32 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/23 02:27:32 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	pipex_here_doc(int argc, char *argv[], char **envp)
 	loop_pipe_here_doc(&data, argv, envp, argc);
 	data.pid_multi = fork();
 	if (data.pid_multi < 0)
-		perror("Fork failed\n");
+		perror("Fork failed");
 	else if (data.pid_multi == 0)
 		exec_child_process_out_multi(&data, argv, envp, argc);
 	close(data.pipe_here_doc[0]);
@@ -85,12 +85,12 @@ void	loop_pipe_here_doc(t_datap *data, char **argv, char **envp, int argc)
 	{
 		if (pipe(data->pipe_fd) == -1)
 		{
-			perror("Couldn't pipe\n");
+			perror("Couldn't pipe");
 			exit(1);
 		}
 		data->pid_multi = fork();
 		if (data->pid_multi < 0)
-			perror("Fork failed\n");
+			perror("Fork failed");
 		else if (data->pid_multi == 0)
 		{
 			dup2(data->fd_infile, STDIN_FILENO);

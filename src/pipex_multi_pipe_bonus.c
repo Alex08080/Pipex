@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:42:30 by alex              #+#    #+#             */
-/*   Updated: 2026/01/23 00:35:15 by alex             ###   ########.fr       */
+/*   Updated: 2026/01/23 02:28:07 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ int	pipex_multi_pipe(int argc, char *argv[], char **envp)
 	data.here_doc = 0;
 	if (data.fd_infile == -1)
 	{
-		perror("Coudldn't open the infile");
+		perror(argv[1]);
 		exit(1);
 	}
 	loop_pipe(&data, argv, envp, argc);
 	data.pid_multi = fork();
 	if (data.pid_multi < 0)
-		perror("Fork failed\n");
+		perror("Fork failed");
 	else if (data.pid_multi == 0)
 		exec_child_process_out_multi(&data, argv, envp, argc);
 	close(data.fd_infile);
@@ -48,7 +48,7 @@ void	exec_child_process_out_multi(t_datap *data, char **argv,
 				| O_TRUNC, 0644);
 	if (data->fd_outfile == -1)
 	{
-		perror("Coudldn't open the infile");
+		perror(argv[argc - 1]);
 		exit(1);
 	}
 	dup2(data->fd_infile, STDIN_FILENO);
@@ -67,12 +67,12 @@ void	loop_pipe(t_datap *data, char **argv, char **envp, int argc)
 	{
 		if (pipe(data->pipe_fd) == -1)
 		{
-			perror("Couldn't pipe\n");
+			perror("Couldn't pipe");
 			exit(1);
 		}
 		data->pid_multi = fork();
 		if (data->pid_multi < 0)
-			perror("Fork failed\n");
+			perror("Fork failed");
 		else if (data->pid_multi == 0)
 		{
 			dup2(data->fd_infile, STDIN_FILENO);
