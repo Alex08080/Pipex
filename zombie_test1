@@ -1,2 +1,2 @@
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-alex      9085  0.0  0.0      0     0 pts/1    Z    17:52   0:00 [sleep] <defunct>
+alex     19969  0.0  0.0      0     0 pts/0    Z    19:38   0:00 [sleep] <defunct>

@@ -33,7 +33,7 @@ void	execute_cmd(char *argv_cmd, char **envp)
 	}
 	if (execve(cmd_path, arg_cmd, envp) == -1)
 	{
-		perror("Coudlnt execve");
+		perror("Couldnt execve");
 		free_split(arg_cmd);
 		exit(126);
 	}

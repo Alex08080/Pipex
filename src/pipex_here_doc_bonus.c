@@ -16,6 +16,7 @@ int	pipex_here_doc(int argc, char *argv[], char **envp)
 {
 	int		waiting;
 	t_datap	data;
+	int		status;
 
 	waiting = 1;
 	data.here_doc = 1;
@@ -36,8 +37,14 @@ int	pipex_here_doc(int argc, char *argv[], char **envp)
 		exec_child_process_out_multi(&data, argv, envp, argc);
 	close(data.pipe_here_doc[0]);
 	while (waiting > 0)
-		waiting = waitpid(-1, &data.status, 0);
-	return (WEXITSTATUS(data.status));
+	{
+		waiting = waitpid(-1, &status, 0);
+		if (waiting == data.pid_multi)
+			data.status = status;
+	}
+	if (WIFEXITED(data.status))
+		return (WEXITSTATUS(data.status));
+	return (1);
 }
 
 int	search_limiter_and_write_here_doc(t_datap *data, char **argv)

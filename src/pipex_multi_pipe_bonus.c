@@ -16,15 +16,12 @@ int	pipex_multi_pipe(int argc, char *argv[], char **envp)
 {
 	int		waiting;
 	t_datap	data;
+	int		status;
 
 	waiting = 1;
-	data.fd_infile = open(argv[1], O_RDONLY);
 	data.here_doc = 0;
-	if (data.fd_infile == -1)
-	{
-		perror(argv[1]);
-		exit(1);
-	}
+	data.fd_infile = -1;
+	data.fd_outfile = -1;
 	loop_pipe(&data, argv, envp, argc);
 	data.pid_multi = fork();
 	if (data.pid_multi < 0)
@@ -33,8 +30,14 @@ int	pipex_multi_pipe(int argc, char *argv[], char **envp)
 		exec_child_process_out_multi(&data, argv, envp, argc);
 	close(data.fd_infile);
 	while (waiting > 0)
-		waiting = waitpid(-1, &data.status, 0);
-	return (data.status);
+	{
+		waiting = waitpid(-1, &status, 0);
+		if (waiting == data.pid_multi)
+			data.status = status;
+	}
+	if (WIFEXITED(data.status))
+		return (WEXITSTATUS(data.status));
+	return (1);
 }
 
 void	exec_child_process_out_multi(t_datap *data, char **argv,
@@ -58,6 +61,21 @@ void	exec_child_process_out_multi(t_datap *data, char **argv,
 	execute_cmd(argv[argc - 2], envp);
 }
 
+static void	open_fd_infile(int i, t_datap *data, char **argv)
+{
+	if (i == 2)
+	{
+		data->fd_infile = open(argv[1], O_RDONLY);
+		if (data->fd_infile == -1)
+		{
+			perror(argv[1]);
+			close(data->pipe_fd[0]);
+			close(data->pipe_fd[1]);
+			exit(1);
+		}
+	}
+}
+
 void	loop_pipe(t_datap *data, char **argv, char **envp, int argc)
 {
 	int	i;
@@ -75,6 +93,7 @@ void	loop_pipe(t_datap *data, char **argv, char **envp, int argc)
 			perror("Fork failed");
 		else if (data->pid_multi == 0)
 		{
+			open_fd_infile(i, data, argv);
 			dup2(data->fd_infile, STDIN_FILENO);
 			dup2(data->pipe_fd[1], STDOUT_FILENO);
 			close_pipe_multi(data);

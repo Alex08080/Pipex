@@ -17,7 +17,7 @@ void	exec_child_process_in(t_datap *data, char **argv, char **envp)
 	data->fd_infile = open(argv[1], O_RDONLY);
 	if (data->fd_infile == -1)
 	{
-		perror("Couldn't open the infile");
+		perror(argv[1]);
 		close(data->pipe_fd[0]);
 		close(data->pipe_fd[1]);
 		exit(1);
@@ -35,7 +35,7 @@ void	exec_child_process_out(t_datap *data, char **argv, char **envp)
 	data->fd_outfile = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (data->fd_outfile == -1)
 	{
-		perror("Coulddn't open the infile");
+		perror(argv[4]);
 		close(data->pipe_fd[0]);
 		close(data->pipe_fd[1]);
 		exit(1);
