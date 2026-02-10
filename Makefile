@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alex <alex@student.42.fr>                  +#+  +:+       +#+         #
+#    By: amoderan <amoderan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/17 17:27:38 by alex              #+#    #+#              #
-#    Updated: 2026/01/23 00:12:19 by alex             ###   ########.fr        #
+#    Updated: 2026/02/06 06:08:56 by amoderan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = pipex
 
 CC = cc
 
-CFLAGS = -g -Wall -Wextra -Werror -Ilibft/ -I./include
+CFLAGS = -g -Wall -Wextra -Werror -Ilibft/ -I./include -fno-omit-frame-pointer
 
 INCDIR = include
 
@@ -54,12 +54,12 @@ $(NAME): $(OBJS) $(LIBFT)
 
 $(LIBFT):
 	@echo "$(BLUE)Compiling libft...$(RESET)"
-	@make -C $(LIBFT_DIR) all
+	@make -C $(LIBFT_DIR) > /dev/null 2>&1
 	@echo "$(GREEN)libft ready!$(RESET)"
 
 bonus : $(OBJS_BONUS) $(LIBFT) $(INCDIR)/get_next_line_bonus.h
 	@echo "$(GREEN)Compiling $(BONUS)...$(RESET)"
-	@$(CC) $(CFLAGS) $(OBJS_BONUS) -o $(NAME) -L$(LIBFT_DIR) -lft
+	@$(CC) $(CFLAGS) $(OBJS_BONUS) -o $(NAME) -L$(LIBFT_DIR) -lft > /dev/null 2>&1
 	@echo "$(GREEN)$(BONUS) created successfully!$(RESET)"
 
 $(SRCDIR)/%.o : $(SRCDIR)/%.c $(INCDIR)/pipex.h

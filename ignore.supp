@@ -1,0 +1,14 @@
+{
+   ignore_system_binaries
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   obj:/usr/bin/*
+}
+{
+   ignore_libc_leaks
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:*
+   obj:*/libc.so.*
+}

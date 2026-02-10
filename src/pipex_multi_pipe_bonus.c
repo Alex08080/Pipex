@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_multi_pipe_bonus.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: amoderan <amoderan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:42:30 by alex              #+#    #+#             */
-/*   Updated: 2026/01/23 02:28:07 by alex             ###   ########.fr       */
+/*   Updated: 2026/02/06 05:34:16 by amoderan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ int	pipex_multi_pipe(int argc, char *argv[], char **envp)
 		perror("Fork failed");
 	else if (data.pid_multi == 0)
 		exec_child_process_out_multi(&data, argv, envp, argc);
-	close(data.fd_infile);
+	if (data.fd_infile >= 0)
+		close(data.fd_infile);
 	while (waiting > 0)
 	{
 		waiting = waitpid(-1, &status, 0);
@@ -96,7 +97,7 @@ void	loop_pipe(t_datap *data, char **argv, char **envp, int argc)
 			open_fd_infile(i, data, argv);
 			dup2(data->fd_infile, STDIN_FILENO);
 			dup2(data->pipe_fd[1], STDOUT_FILENO);
-			close_pipe_multi(data);
+			close_pipe_multi_fork(data);
 			execute_cmd(argv[i], envp);
 		}
 		close_pipe_multi(data);
@@ -106,7 +107,9 @@ void	loop_pipe(t_datap *data, char **argv, char **envp, int argc)
 }
 
 void	close_pipe_multi(t_datap *data)
-{
-	close(data->fd_infile);
-	close(data->pipe_fd[1]);
+{	
+	if (data->fd_infile >= 0)
+		close(data->fd_infile);
+	if (data->pipe_fd[1] >= 0)
+		close(data->pipe_fd[1]);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: amoderan <amoderan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 17:32:00 by alex              #+#    #+#             */
-/*   Updated: 2026/01/23 00:43:46 by alex             ###   ########.fr       */
+/*   Updated: 2026/02/06 05:39:51 by amoderan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	loop_pipe(t_datap *data, char **argv, char **envp, int argc);
 void	exec_child_process_out_multi(t_datap *data, char **argv,
 			char **envp, int argc);
 void	close_pipe_multi(t_datap *data);
+void	close_pipe_multi_fork(t_datap *data);
 
 /* PIPEX HERE_DOC */
 
@@ -67,5 +68,6 @@ int		pipex_here_doc(int argc, char *argv[], char **envp);
 char	*do_limiter(char *argv);
 void	loop_pipe_here_doc(t_datap *data, char **argv, char **envp, int argc);
 int		search_limiter_and_write_here_doc(t_datap *data, char **argv);
+void	loop_waiting(t_datap *data);
 
 #endif 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: amoderan <amoderan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:48:09 by alex              #+#    #+#             */
-/*   Updated: 2026/01/23 00:03:28 by alex             ###   ########.fr       */
+/*   Updated: 2026/02/06 04:03:19 by amoderan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	exec_child_process_in(t_datap *data, char **argv, char **envp)
 	if (data->fd_infile == -1)
 	{
 		perror(argv[1]);
+		close(data->fd_infile);
+		close(data->fd_outfile);
 		close(data->pipe_fd[0]);
 		close(data->pipe_fd[1]);
 		exit(1);
@@ -36,6 +38,8 @@ void	exec_child_process_out(t_datap *data, char **argv, char **envp)
 	if (data->fd_outfile == -1)
 	{
 		perror(argv[4]);
+		close(data->fd_infile);
+		close(data->fd_outfile);
 		close(data->pipe_fd[0]);
 		close(data->pipe_fd[1]);
 		exit(1);

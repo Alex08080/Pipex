@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: amoderan <amoderan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:56:11 by alex              #+#    #+#             */
-/*   Updated: 2026/01/22 17:02:37 by alex             ###   ########.fr       */
+/*   Updated: 2026/02/06 05:23:10 by amoderan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+
+static void	arg_cmd_null(char ***arg_cmd)
+{	
+	perror("Command not found");
+	if (*arg_cmd)
+		free_split(*arg_cmd);
+	exit(127);
+}
 
 void	execute_cmd(char *argv_cmd, char **envp)
 {
@@ -19,12 +27,7 @@ void	execute_cmd(char *argv_cmd, char **envp)
 
 	arg_cmd = ft_split(argv_cmd, ' ');
 	if (!arg_cmd || !arg_cmd[0])
-	{
-		perror("Command not found");
-		if (arg_cmd)
-			free(arg_cmd);
-		exit(127);
-	}
+		arg_cmd_null(&arg_cmd);
 	cmd_path = path_to_find(arg_cmd[0], envp);
 	if (!cmd_path)
 	{
@@ -35,6 +38,7 @@ void	execute_cmd(char *argv_cmd, char **envp)
 	{
 		perror("Couldnt execve");
 		free_split(arg_cmd);
+		free(cmd_path);
 		exit(126);
 	}
 	free_split(arg_cmd);

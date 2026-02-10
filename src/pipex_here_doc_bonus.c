@@ -3,22 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_here_doc_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: amoderan <amoderan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 20:43:54 by alex              #+#    #+#             */
-/*   Updated: 2026/01/23 02:27:32 by alex             ###   ########.fr       */
+/*   Updated: 2026/02/06 05:40:59 by amoderan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
+static void	fork_here_doc(t_datap *data, char **argv, char **envp, int argc)
+{
+	data->pid_multi = fork();
+	if (data->pid_multi < 0)
+		perror("Fork failed");
+	else if (data->pid_multi == 0)
+		exec_child_process_out_multi(data, argv, envp, argc);
+	close(data->pipe_here_doc[0]);
+	close(data->fd_infile);
+}
+
 int	pipex_here_doc(int argc, char *argv[], char **envp)
 {
-	int		waiting;
 	t_datap	data;
-	int		status;
 
-	waiting = 1;
 	data.here_doc = 1;
 	if (pipe(data.pipe_here_doc) == -1)
 	{
@@ -30,18 +38,8 @@ int	pipex_here_doc(int argc, char *argv[], char **envp)
 	close(data.pipe_here_doc[1]);
 	dup2(data.pipe_here_doc[0], STDIN_FILENO);
 	loop_pipe_here_doc(&data, argv, envp, argc);
-	data.pid_multi = fork();
-	if (data.pid_multi < 0)
-		perror("Fork failed");
-	else if (data.pid_multi == 0)
-		exec_child_process_out_multi(&data, argv, envp, argc);
-	close(data.pipe_here_doc[0]);
-	while (waiting > 0)
-	{
-		waiting = waitpid(-1, &status, 0);
-		if (waiting == data.pid_multi)
-			data.status = status;
-	}
+	fork_here_doc(&data, argv, envp, argc);
+	loop_waiting(&data);
 	if (WIFEXITED(data.status))
 		return (WEXITSTATUS(data.status));
 	return (1);
@@ -102,7 +100,7 @@ void	loop_pipe_here_doc(t_datap *data, char **argv, char **envp, int argc)
 		{
 			dup2(data->fd_infile, STDIN_FILENO);
 			dup2(data->pipe_fd[1], STDOUT_FILENO);
-			close_pipe_multi(data);
+			close_pipe_multi_fork(data);
 			execute_cmd(argv[i], envp);
 		}
 		close_pipe_multi(data);
